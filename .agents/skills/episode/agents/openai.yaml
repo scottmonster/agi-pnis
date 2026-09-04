@@ -3,4 +3,4 @@ interface:
   short_description: "Record material judgement and failure episodes"
   default_prompt: "Use $episode to record a governing material judgement, material update, or detected failure."
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

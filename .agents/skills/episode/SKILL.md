@@ -1,7 +1,7 @@
 ---
 name: episode
 description: Use when a governing material judgement is established or materially updated, or a detected material failure requires a record. Do not use for active discussion, routine work, implementation, ordinary validation, execution logs, or tentative analysis.
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # Episode
