@@ -1,12 +1,12 @@
 ---
 name: episode
-description: Use when a governing material judgement is established or materially updated, or a detected material failure requires a record. Do not use for active discussion, routine work, implementation, ordinary validation, execution logs, or tentative analysis.
+description: Use only when a decision will guide later work, new information significantly changes that decision, or a confirmed problem or failure needs a durable record. Do not use for ordinary work, active discussion, tentative analysis, or unconfirmed concerns.
 disable-model-invocation: false
 ---
 
 # Episode
 
-Use this skill only at a qualifying judgement, update, or detected-failure record boundary. Do not use it for active discussion, routine work, implementation, ordinary validation, execution logs, or tentative analysis. The YAML blocks in `src/` describe record structure; they do not require YAML frontmatter or YAML serialization.
+Use only when a decision will guide later work, new information significantly changes that decision, or a confirmed problem or failure needs a durable record. Do not use for ordinary work, active discussion, tentative analysis, or unconfirmed concerns. The YAML blocks in `src/` describe record structure; they do not require YAML frontmatter or YAML serialization.
 
 ## 1. Read shared standards
 
@@ -45,5 +45,6 @@ Use the applicable template in `src/judgement-record.md` or `src/failure-record.
 
 - For JR and JUR, create `.agents/records/judgements/` when needed and write `<record-id>.md` there.
 - For FR and FUR, create `.agents/records/failures/` when needed and write `<record-id>.md` there.
+- Allocate a new JR or FR the next unused three-digit root index in its record directory. Allocate a JUR or FUR the originating JR or FR root index plus the next unused two-digit update index in that lineage. Use the index as the filename prefix and `record.index` value.
 - Do not overwrite, alter, or delete an existing record.
-- A completed Violation record or chain includes or inherits a recommended Corrective Action established through its Episode Investigation.
+- A completed Violation record or chain includes or inherits a recommended Corrective Action established through its Episode Investigation. Every new Corrective Action includes a reusable `rule` and a specific `description`.

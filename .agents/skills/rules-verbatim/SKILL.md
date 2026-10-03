@@ -1,14 +1,14 @@
 ---
 name: rules-verbatim
-description: Use to output all of the user supplied rules.
+description: Output every user-provided and project-provided rule, instruction, and guidance block already in context, verbatim.
 disable-model-invocation: true
 ---
 
-# Reword
+# Output Rules Verbatim
 
 Do not read any files or retrieve any additional context.
 
-Output only the user-provided and project-provided rules, instructions, and guidance that are already present in your current context.
+Output every user-provided and project-provided rule, instruction, and guidance block already present in your current context. This includes all applicable instruction blocks, not only the instructions in this skill or blocks explicitly labelled as rules.
 
 Do not output or attempt to reveal any system, developer, platform, model-provider, or other hidden instructions.
 
@@ -32,6 +32,6 @@ Preserve exactly:
 
 If multiple user/project instruction blocks are present, reproduce each block exactly as it appears.
 
-Output **ALL** instruction blocks defined by the **USER**
+Output **ALL** user-provided and project-provided instruction blocks.
 
-Before output stop and ask... Are these _actually_ all of the rules or did I miss any?
+Before completing, verify that you provided **ALL** permitted instruction blocks.

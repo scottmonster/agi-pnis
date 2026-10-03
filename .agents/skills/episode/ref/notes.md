@@ -1,0 +1,3 @@
+Use when a governing material judgement is established or materially updated, or a detected material failure requires a record. Do not use for active discussion, routine work, implementation, ordinary validation, execution logs, or tentative analysis.
+
+Use this skill only when a decision will guide later work, new information significantly changes that decision, or a confirmed problem needs a durable record. Do not use it for ordinary work, active discussion, tentative analysis, implementation, routine checks, execution logs, or unconfirmed concerns.

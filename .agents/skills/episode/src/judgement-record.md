@@ -6,7 +6,9 @@ A Judgement Record (JR) preserves a material, non-obvious exercise of discretion
 
 A Judgement Update Record (JUR) preserves later material information that changes, corrects, supplements, or identifies an error in a JR or JUR.
 
-Each JR and JUR is one Markdown file in `.agents/records/judgements/`, named `<record-id>.md`. The skill creates that directory when needed. Records are immutable and their files are the canonical record.
+Each JR and JUR is one Markdown file in `.agents/records/judgements/`. A JR filename is `<root-index>-JR-<slug>.md`, such as `001-JR-access-rule.md`. A JUR filename is `<root-index>.<update-index>-JUR-<slug>.md`, such as `001.00-JUR-access-rule-corrected.md`. Root indexes have three digits and update indexes have two digits. The skill creates the directory when needed. Records are immutable and their files are the canonical record.
+
+`record.index` matches the filename prefix. A JUR uses the root index of its originating JR and the next unused update index for that lineage. `record.id` remains the stable relationship identifier.
 
 Use [episode.md](episode.md) for shared requirements and [schema.md](schema.md) for the data dictionary.
 
@@ -60,6 +62,7 @@ The YAML blocks are concise Markdown templates, not required record serializatio
 # JR: <title>
 record:
   id: <stable ID>
+  index: "<next three-digit root index>"
   record_type: JR
   title: <concise title>
   recorded_at: <time>
@@ -85,6 +88,7 @@ judgement:
 # JUR: <title>
 record:
   id: <stable ID>
+  index: "<originating root index>.<next two-digit update index>"
   record_type: JUR
   title: <concise title>
   recorded_at: <time>
@@ -121,7 +125,8 @@ investigation: # required for concern or violation
   limitations: <when material>
 
 corrective_actions: # required to complete a violation JUR unless inherited
-  - description: <recommended action>
+  - rule: <reusable instruction that prevents the pattern>
+    description: <recommended action>
     target: <where it applies>
     status: recommended
     validation: <when performed>

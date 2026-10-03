@@ -14,10 +14,10 @@ Applicable rules stack cumulatively.
 
 The selected operation defines the authorized boundary.
 For transform and revise, preservation governs recovered source meaning, retained literals, compatibility, and unresolved conflicts.
-Content governs material meaning, authority, and usability.
+Except in format-only mode, content governs material meaning, authority, and usability.
 Compression may reduce expression only within those constraints.
 Format governs permitted structural and Markdown presentation changes.
-Format uses the applicable content model established by the operation, content, and, when applicable, preservation rules. It does not establish or alter that model.
+Format uses the applicable content model established by the operation, content, and, when applicable, preservation rules. It does not establish or alter that model. In format-only mode, it operates alone.
 
 When rules address the same action, apply the more specific rule within its stated scope. Format does not authorize a change to material meaning, compatibility, or other preservation obligations.
 
@@ -25,8 +25,10 @@ When rules address the same action, apply the more specific rule within its stat
 
 ## Content Rules and format
 
-- Content Rules are used for every operation. Require `src/rules/content.md`
-- For all operations Require `src/rules/format.md` **UNLESS** the user requests to preserve format and/or structure
+- Create, transform, revise, and audit use Content Rules. Require `src/rules/content.md`.
+- Format-only does not use Content Rules.
+- Create, transform, revise, and audit require `src/rules/format.md` unless the user requests to preserve format and/or structure.
+- Format-only always requires `src/rules/format.md`.
 
 ## Choose operation
 
@@ -34,10 +36,11 @@ When rules address the same action, apply the more specific rule within its stat
 - **Transform:** Source file, unless explicitly overridden. Redesign permitted scope while preserving material meaning and use. Require `src/operations/transform.md` and `src/rules/preservation.md`
 - **Revise:** Use for a scoped change within an existing document, such as updating, correcting, adding, or removing specific content. Require `src/operations/revise.md` and `src/rules/preservation.md`
 - **Audit:** Review an existing artifact without editing it. A source is optional. With a source, review preservation. Without one, review coverage of the request and authoritative inputs, internal consistency, and applicable rules. Require `src/operations/audit.md`
+- **Format-only:** Use when the request says `format only` or otherwise asks to format Markdown only. Do not use content rules, a compression level, or an audit. Require only `src/rules/format.md`.
 
 ## Choose compression
 
-Compression applies to create, revise, and transform. Audit does not use a compression level.
+Compression applies to create, revise, and transform. Audit and format-only do not use a compression level.
 Compression modifies expression within the selected operation's authorized boundary. It does not change what is authorized, required, or preserved.
 
 Select compression case-insensitively.
@@ -71,11 +74,11 @@ my-md compression=hi file.md
 ## Perform action
 
 1. Read every file required by the selected operation and applicable rules.
-2. Complete the requested create, revise, transform, or audit operation.
+2. Complete the selected operation.
 
 ## Delivery gate
 
-Apply this gate after create, revise, or transform. Do not apply it when the selected operation is audit.
+Apply this gate after create, revise, or transform. Do not apply it when the selected operation is audit or format-only.
 
 1. **Complete** the create, revise, or transform, then save its resulting artifact to a file. **Only after** the artifact is saved may the audit begin.
 2. **Confirm** that the audit has a completed, saved artifact and the applicable baseline:

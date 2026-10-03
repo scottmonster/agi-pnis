@@ -4,7 +4,9 @@
 
 A Failure Record (FR) records a detected failure. A Failure Update Record (FUR) records later material information that changes, corrects, supplements, or identifies an error in an FR or FUR.
 
-FRs and FURs are always material Violations. Each is one Markdown file in `.agents/records/failures/`, named `<record-id>.md`. The skill creates that directory when needed. Records are immutable and their files are the canonical record.
+FRs and FURs are always material Violations. Each is one Markdown file in `.agents/records/failures/`. An FR filename is `<root-index>-FR-<slug>.md`, such as `001-FR-incorrect-rule.md`. An FUR filename is `<root-index>.<update-index>-FUR-<slug>.md`, such as `001.00-FUR-correction.md`. Root indexes have three digits and update indexes have two digits. The skill creates that directory when needed. Records are immutable and their files are the canonical record.
+
+`record.index` matches the filename prefix. An FUR uses the root index of its originating FR and the next unused update index for that lineage. `record.id` remains the stable relationship identifier.
 
 Use [episode.md](episode.md) for shared requirements, [schema.md](schema.md) for the data dictionary, and [failures.md](failures.md) for failure classification.
 
@@ -40,6 +42,7 @@ The YAML blocks are concise Markdown templates, not required record serializatio
 # FR: <title>
 record:
   id: <stable ID>
+  index: "<next three-digit root index>"
   record_type: FR
   title: <concise title>
   recorded_at: <time>
@@ -73,7 +76,8 @@ investigation:
   causal_status: <observed | inferred | hypothesized | unknown>
 
 corrective_actions:
-  - description: <recommended action>
+  - rule: <reusable instruction that prevents the pattern>
+    description: <recommended action>
     target: <where it applies>
     status: recommended
 ```
@@ -84,6 +88,7 @@ corrective_actions:
 # FUR: <title>
 record:
   id: <stable ID>
+  index: "<originating root index>.<next two-digit update index>"
   record_type: FUR
   title: <concise title>
   recorded_at: <time>
@@ -126,7 +131,8 @@ investigation: # only changed findings or state
   limitations: <only when changed>
 
 corrective_actions: # only changed or newly recommended actions
-  - description: <action>
+  - rule: <only when changed or newly established>
+    description: <action>
     target: <only when changed>
     status: <recommended | accepted | implemented | rejected>
     validation: <only when changed or performed>

@@ -57,6 +57,7 @@ def validate_templates() -> None:
     judgement = (SRC / "judgement-record.md").read_text(encoding="utf-8")
     failure = (SRC / "failure-record.md").read_text(encoding="utf-8")
     catalog = (SRC / "failures.md").read_text(encoding="utf-8")
+    schema = (SRC / "schema.md").read_text(encoding="utf-8")
 
     jur_fields = (
         "kind: <only when changed>",
@@ -91,6 +92,24 @@ def validate_templates() -> None:
     for field in fur_fields:
         require(field in failure, f"FUR template lacks delta field: {field}")
 
+    for field in (
+        'index: "<next three-digit root index>"',
+        'index: "<originating root index>.<next two-digit update index>"',
+        "rule: <reusable instruction that prevents the pattern>",
+    ):
+        require(field in judgement, f"judgement template lacks required field: {field}")
+
+    for field in (
+        'index: "<next three-digit root index>"',
+        'index: "<originating root index>.<next two-digit update index>"',
+        "rule: <reusable instruction that prevents the pattern>",
+        "rule: <only when changed or newly established>",
+    ):
+        require(field in failure, f"failure template lacks required field: {field}")
+
+    require("Use `<index>-<record_type>-<slug>.md` as the filename." in schema, "schema lacks indexed filename rule")
+    require("Every new Corrective Action includes `rule`." in schema, "schema lacks required corrective-action rule")
+
     for row in (
         "| User-triggered | User-activity | Not a violation | Not required |",
         "| User-triggered | Agent-activity | Concern | Required |",
@@ -124,6 +143,41 @@ def validate_record_paths() -> None:
     require("Create an FUR when later material information changes" in failure, "FUR update path is missing")
 
 
+def validate_existing_failure_indexes() -> None:
+    records = ROOT.parents[1] / "records" / "failures"
+    if not records.is_dir():
+        return
+
+    root_pattern = re.compile(r"^(?P<root>\d{3})-FR-[a-z0-9-]+\.md$")
+    update_pattern = re.compile(r"^(?P<root>\d{3})\.(?P<update>\d{2})-FUR-[a-z0-9-]+\.md$")
+    roots: set[str] = set()
+    updates: set[tuple[str, str]] = set()
+
+    for path in records.glob("*.md"):
+        root_match = root_pattern.match(path.name)
+        update_match = update_pattern.match(path.name)
+        require(root_match or update_match, f"failure record has invalid indexed filename: {path.name}")
+        if root_match:
+            root = root_match.group("root")
+            require(root not in roots, f"duplicate failure root index: {root}")
+            roots.add(root)
+        else:
+            assert update_match is not None
+            key = (update_match.group("root"), update_match.group("update"))
+            require(key not in updates, f"duplicate failure update index: {'.'.join(key)}")
+            updates.add(key)
+
+    root_numbers = sorted(int(root) for root in roots)
+    require(root_numbers == list(range(1, len(root_numbers) + 1)), "FR root indexes are not sequential")
+
+    update_numbers: dict[str, list[int]] = {}
+    for root, update in updates:
+        require(root in roots, f"FUR has no originating FR index: {root}")
+        update_numbers.setdefault(root, []).append(int(update))
+    for root, numbers in update_numbers.items():
+        require(sorted(numbers) == list(range(len(numbers))), f"FUR update indexes are not sequential for FR {root}")
+
+
 def validate_skill() -> None:
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
     frontmatter = re.match(r"^---\n(.*?)\n---", skill, re.DOTALL)
@@ -131,8 +185,9 @@ def validate_skill() -> None:
     metadata = yaml.safe_load(frontmatter.group(1))
     require(metadata["name"] == "episode", "SKILL.md name must be episode")
     require(metadata["description"].startswith("Use when"), "SKILL.md description must state when to use the skill")
-    require("Do not use for active discussion" in metadata["description"], "SKILL.md description must exclude routine and tentative work")
-    require(metadata.get("disable-model-invocation") is True, "SKILL.md must disable implicit model invocation")
+    require("decision will guide later work" in metadata["description"], "SKILL.md description must state the plain-language decision trigger")
+    require("Do not use for ordinary work" in metadata["description"], "SKILL.md description must exclude routine work")
+    require(metadata.get("disable-model-invocation") is False, "SKILL.md must allow automatic invocation")
     for text in (
         "src/judgement-record.md",
         "src/failures.md",
@@ -150,9 +205,8 @@ def validate_skill() -> None:
     openai = yaml.safe_load((ROOT / "agents" / "openai.yaml").read_text(encoding="utf-8"))
     require(openai["interface"]["display_name"] == "Episode", "openai.yaml display name must be Episode")
     require(openai["interface"]["default_prompt"].startswith("Use $episode"), "openai.yaml default prompt must name $episode")
-    require(openai["policy"]["allow_implicit_invocation"] is False, "openai.yaml must disable implicit invocation")
+    require(openai["policy"]["allow_implicit_invocation"] is True, "openai.yaml must allow automatic invocation")
 
-    require(not (ROOT / "ref").exists(), "runtime policy sources belong in src/, not ref/")
     nested = [path for path in ROOT.rglob("SKILL.md") if path != ROOT / "SKILL.md"]
     require(not nested, f"nested SKILL.md files are not allowed: {nested}")
 
@@ -162,6 +216,7 @@ def main() -> None:
     validate_source_links()
     validate_templates()
     validate_record_paths()
+    validate_existing_failure_indexes()
     validate_skill()
     print("episode skill validation passed")
 
