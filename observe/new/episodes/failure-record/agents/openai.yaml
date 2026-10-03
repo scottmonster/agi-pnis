@@ -1,0 +1,6 @@
+interface:
+  display_name: "Failure Record"
+  short_description: "Create material FR and FUR records"
+  default_prompt: "Use $failure-record to create or update a material Failure Record (FR) or Failure Update Record (FUR)."
+policy:
+  allow_implicit_invocation: false

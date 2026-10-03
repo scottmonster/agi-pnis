@@ -1,0 +1,4 @@
+interface:
+  display_name: "Judgment Record"
+  short_description: "Capture immutable judgment evidence"
+  default_prompt: "Use $judgement-record to capture a completed material judgment or later material outcome."

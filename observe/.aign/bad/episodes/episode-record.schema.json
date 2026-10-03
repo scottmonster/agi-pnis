@@ -1,0 +1,669 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gov-lab.local/observe/episodes/episode-record.schema.json",
+  "title": "Material Episode Record",
+  "description": "The shared machine-readable structure for Judgment Records, Judgment Update Records, Failure Records, and Failure Update Records. It distinguishes partial drafts from publishable records and validates their machine-verifiable structure; specialist standards decide qualification, applicability, materiality, and semantic completeness.",
+  "type": "object",
+  "required": ["id", "record_type", "schema_version", "record_status"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable record identifier, independent of location and local sequence."
+    },
+    "record_type": {
+      "type": "string",
+      "enum": ["JR", "JUR", "FR", "FUR"],
+      "description": "The Material Episode Record type."
+    },
+    "schema_version": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Version of this record's structural format, not a judgment or failure classification."
+    },
+    "record_status": {
+      "type": "string",
+      "enum": ["draft", "publishable"],
+      "description": "Whether the record is a partial draft or is intended to satisfy its machine-verifiable publishable profile."
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "local_id": { "type": "string", "minLength": 1 },
+    "recorded_at": { "$ref": "#/$defs/timestamp" },
+    "event_at": { "$ref": "#/$defs/timestamp" },
+    "recorded_by": { "$ref": "#/$defs/actor" },
+    "sensitivity": { "$ref": "#/$defs/sensitivity" },
+    "source": { "$ref": "#/$defs/source" },
+    "episode": { "$ref": "#/$defs/episode" },
+    "intended_outcome": { "$ref": "#/$defs/informationItem" },
+    "success_criteria": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/informationItem" }
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/informationItem" }
+    },
+    "authority": { "$ref": "#/$defs/authority" },
+    "judgment": { "$ref": "#/$defs/judgment" },
+    "actors": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/actor" }
+    },
+    "agent_context": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/agentContext" }
+    },
+    "instructions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/informationItem" }
+    },
+    "tools": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/toolContext" }
+    },
+    "runtime": { "$ref": "#/$defs/contextItem" },
+    "environment": { "$ref": "#/$defs/contextItem" },
+    "artifacts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    },
+    "commands": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    },
+    "tool_results": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    },
+    "changes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    },
+    "tests": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    },
+    "external_state": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    },
+    "evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" },
+      "description": "Material evidence not more specifically represented elsewhere."
+    },
+    "supporting_evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    },
+    "contrary_evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    },
+    "claims": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/claim" }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/claim" }
+    },
+    "inferences": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/claim" }
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/claim" }
+    },
+    "tested_findings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/claim" }
+    },
+    "outcome": { "$ref": "#/$defs/outcome" },
+    "impact": { "$ref": "#/$defs/impact" },
+    "feedback": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    },
+    "reviews": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    },
+    "evaluation": { "$ref": "#/$defs/evaluation" },
+    "failure": { "$ref": "#/$defs/failure" },
+    "violation": { "$ref": "#/$defs/violation" },
+    "investigation": { "$ref": "#/$defs/investigation" },
+    "corrective_actions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/correctiveAction" }
+    },
+    "remediation": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    },
+    "corrections": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    },
+    "relationships": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/relationship" }
+    },
+    "later_outcomes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": { "properties": { "record_status": { "const": "publishable" } }, "required": ["record_status"] },
+      "then": { "required": ["title", "recorded_at"] }
+    },
+    {
+      "if": { "properties": { "record_status": { "const": "publishable" }, "record_type": { "const": "JR" } }, "required": ["record_status", "record_type"] },
+      "then": {
+        "required": ["authority", "judgment"],
+        "properties": {
+          "judgment": {
+            "required": ["judgment_kind", "settled_at", "completion_boundary", "judgment_required", "governing_basis", "settled_statement", "direction", "rationale", "scope"],
+            "properties": { "scope": { "required": ["precedent"] } }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "record_status": { "const": "publishable" }, "record_type": { "const": "JUR" } }, "required": ["record_status", "record_type"] },
+      "then": {
+        "required": ["event_at", "recorded_by", "judgment"],
+        "properties": { "judgment": { "required": ["subject_record_id", "update_kind"] } }
+      }
+    },
+    {
+      "if": { "properties": { "record_status": { "const": "publishable" }, "record_type": { "const": "FR" } }, "required": ["record_status", "record_type"] },
+      "then": {
+        "required": ["failure", "violation", "impact"],
+        "properties": {
+          "failure": { "required": ["name", "harness"] },
+          "violation": { "required": ["statement", "applicable_expectation", "observed_departure"] }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "record_status": { "const": "publishable" }, "record_type": { "const": "FUR" } }, "required": ["record_status", "record_type"] },
+      "then": {
+        "required": ["event_at", "failure"],
+        "properties": { "failure": { "required": ["subject_record_id", "update_kind"] } }
+      }
+    }
+  ],
+  "$defs": {
+    "availabilityState": {
+      "type": "string",
+      "enum": [
+        "available",
+        "unavailable",
+        "not collected",
+        "restricted or unsafe to retain",
+        "not applicable"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sensitivity": {
+      "type": "string",
+      "enum": ["public", "internal", "restricted"]
+    },
+    "reference": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "location": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "minLength": 1 },
+        "observed_at": { "$ref": "#/$defs/timestamp" },
+        "content_hash": { "type": "string", "minLength": 1 },
+        "excerpt": { "type": "string" },
+        "sensitivity": { "$ref": "#/$defs/sensitivity" },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "informationItem": {
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "#/$defs/availabilityState" },
+        "statement": { "type": "string" },
+        "reference": { "$ref": "#/$defs/reference" },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "contextItem": {
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "#/$defs/availabilityState" },
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "details": { "type": "string" },
+        "reference": { "$ref": "#/$defs/reference" },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "#/$defs/availabilityState" },
+        "repository_id": { "type": "string", "minLength": 1 },
+        "record_path": { "type": "string", "minLength": 1 },
+        "work_revision": { "type": "string", "minLength": 1 },
+        "references": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reference" }
+        },
+        "limitation": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "episode": {
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "#/$defs/availabilityState" },
+        "episode_id": { "type": "string", "minLength": 1 },
+        "task_references": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reference" }
+        },
+        "issue_references": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reference" }
+        },
+        "request_references": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reference" }
+        },
+        "related_episode_references": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reference" }
+        },
+        "limitation": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "authority": {
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "#/$defs/availabilityState" },
+        "settled_by": { "type": "string", "minLength": 1 },
+        "basis": { "$ref": "#/$defs/informationItem" },
+        "permissions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/informationItem" }
+        },
+        "established_direction": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/informationItem" }
+        },
+        "settlement_evidence": { "$ref": "#/$defs/evidenceItem" },
+        "limitation": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "judgment": {
+      "type": "object",
+      "description": "Judgment-specific structure. The judgment specialist determines when these fields are required and whether a record qualifies as a JR or JUR.",
+      "properties": {
+        "judgment_kind": {
+          "type": "string",
+          "enum": ["decision", "interpretation", "assumption", "tradeoff", "conflict_resolution", "scope_boundary", "exception", "intentional_departure", "other"]
+        },
+        "update_kind": {
+          "type": "string",
+          "enum": ["implementation", "validation", "outcome", "error", "correction", "review"]
+        },
+        "settled_at": { "$ref": "#/$defs/timestamp" },
+        "completion_boundary": { "$ref": "#/$defs/informationItem" },
+        "judgment_required": { "$ref": "#/$defs/informationItem" },
+        "governing_basis": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/informationItem" }
+        },
+        "settled_statement": { "$ref": "#/$defs/informationItem" },
+        "direction": { "$ref": "#/$defs/informationItem" },
+        "rationale": { "$ref": "#/$defs/informationItem" },
+        "alternatives_considered": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/informationItem" }
+        },
+        "revisit_triggers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/informationItem" }
+        },
+        "consequences": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/informationItem" }
+        },
+        "accepted_tradeoffs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/informationItem" }
+        },
+        "scope": {
+          "type": "object",
+          "properties": {
+            "applies_to": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/informationItem" }
+            },
+            "conditions": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/informationItem" }
+            },
+            "excludes": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/informationItem" }
+            },
+            "precedent": { "type": "string", "enum": ["case_only", "default_in_scope", "binding_in_scope"] }
+          },
+          "additionalProperties": false
+        },
+        "subject_record_id": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "actor": {
+      "type": "object",
+      "required": ["id", "actor_type"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "actor_type": {
+          "type": "string",
+          "enum": ["person", "software_agent", "tool", "service", "organization", "unknown"]
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["identified", "proposed", "provided_evidence", "evaluated", "challenged", "settled", "recorded", "reviewed", "implemented", "validated", "investigated", "corrected", "other"]
+          },
+          "uniqueItems": true
+        },
+        "availability": { "$ref": "#/$defs/availabilityState" },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "agentContext": {
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "#/$defs/availabilityState" },
+        "actor_id": { "type": "string", "minLength": 1 },
+        "system_id": { "type": "string", "minLength": 1 },
+        "system_version": { "type": "string", "minLength": 1 },
+        "model_id": { "type": "string", "minLength": 1 },
+        "reasoning_configuration": { "$ref": "#/$defs/reasoningConfiguration" },
+        "context_window": { "$ref": "#/$defs/contextWindow" },
+        "run_id": { "type": "string", "minLength": 1 },
+        "instruction_profile": { "$ref": "#/$defs/reference" },
+        "tool_context": { "$ref": "#/$defs/reference" },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "toolContext": {
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "#/$defs/availabilityState" },
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "provider": { "type": "string" },
+        "capabilities": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "reference": { "$ref": "#/$defs/reference" },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "reasoningConfiguration": {
+      "type": "object",
+      "description": "Provider- or harness-reported reasoning configuration. Values are not assumed to be equivalent across providers.",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "#/$defs/availabilityState" },
+        "provider_setting_name": { "type": "string", "minLength": 1 },
+        "provider_setting_value": { "type": "string", "minLength": 1 },
+        "source": {
+          "type": "string",
+          "enum": ["runtime_metadata", "run_configuration", "agent_report", "operator_report", "inferred", "unknown"]
+        },
+        "reference": { "$ref": "#/$defs/reference" },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "contextWindow": {
+      "type": "object",
+      "description": "Known, reported, calculated, or estimated context-window telemetry. Token counts and saturation are optional because providers may reserve output capacity or use different accounting methods.",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "#/$defs/availabilityState" },
+        "used_tokens": { "type": "integer", "minimum": 0 },
+        "capacity_tokens": { "type": "integer", "minimum": 1 },
+        "saturation_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+        "window_scope": {
+          "type": "string",
+          "enum": ["input_context", "combined_context_and_output_reservation", "provider_defined", "unknown"]
+        },
+        "measurement_basis": {
+          "type": "string",
+          "enum": ["directly_reported", "calculated_from_reported_counts", "estimated", "inferred", "unknown"]
+        },
+        "observed_at": { "$ref": "#/$defs/timestamp" },
+        "limit_reached": { "type": "boolean" },
+        "reference": { "$ref": "#/$defs/reference" },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "evidenceItem": {
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "#/$defs/availabilityState" },
+        "type": {
+          "type": "string",
+          "enum": ["task", "issue", "request", "requirement", "policy", "judgment", "instruction", "prompt", "artifact", "command", "tool_result", "change", "test", "external_state", "feedback", "review", "evaluation", "trace", "transcript", "replay", "comparison", "agent_account", "investigator_finding", "other"]
+        },
+        "role": {
+          "type": "string",
+          "enum": ["context", "authority", "constraint", "supporting", "contrary", "detection", "containment", "investigation", "validation", "outcome", "correction", "other"]
+        },
+        "reference": { "$ref": "#/$defs/reference" },
+        "summary": { "type": "string" },
+        "observed_at": { "$ref": "#/$defs/timestamp" },
+        "retention_note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "claim": {
+      "type": "object",
+      "required": ["status", "statement"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["observation", "evaluation", "inference", "hypothesis", "tested_finding"]
+        },
+        "statement": { "type": "string", "minLength": 1 },
+        "evidence_references": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reference" }
+        },
+        "contrary_evidence_references": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reference" }
+        },
+        "limitations": { "type": "string" },
+        "tested_at": { "$ref": "#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    },
+    "outcome": {
+      "type": "object",
+      "properties": {
+        "availability": { "$ref": "#/$defs/availabilityState" },
+        "expected": { "$ref": "#/$defs/informationItem" },
+        "observed": { "$ref": "#/$defs/informationItem" },
+        "difference": { "$ref": "#/$defs/informationItem" },
+        "status": { "type": "string", "enum": ["met", "partially_met", "not_met", "unknown"] }
+      },
+      "additionalProperties": false
+    },
+    "impact": {
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "#/$defs/availabilityState" },
+        "level": { "type": "string", "enum": ["none", "low", "medium", "high", "unknown"] },
+        "description": { "type": "string" },
+        "affected_scope": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reference" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "evaluation": {
+      "type": "object",
+      "properties": {
+        "availability": { "$ref": "#/$defs/availabilityState" },
+        "basis": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["user_feedback", "test", "review", "policy_check", "observation", "other"] },
+          "uniqueItems": true
+        },
+        "evaluator": { "$ref": "#/$defs/actor" },
+        "criterion": { "$ref": "#/$defs/informationItem" },
+        "causal_status": { "type": "string", "enum": ["observed", "inferred", "hypothesized", "unknown"] },
+        "reference": { "$ref": "#/$defs/reference" },
+        "limitations": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "failure": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "classifications": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "harness": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Open harness identifier. Values may include manual or unknown."
+        },
+        "prevention_loci": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["agent_level", "tool_level", "shared_agent_and_tool", "task_or_external", "unresolved"] },
+          "uniqueItems": true
+        },
+        "classification_note": { "type": "string" },
+        "subject_record_id": { "type": "string", "minLength": 1 },
+        "update_kind": {
+          "type": "string",
+          "enum": ["investigation", "containment", "corrective_action", "validation", "correction", "review", "recurrence", "outcome", "other"]
+        },
+        "update_kind_note": { "type": "string" }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "update_kind": { "const": "other" } }, "required": ["update_kind"] },
+          "then": { "required": ["update_kind_note"] }
+        }
+      ]
+    },
+    "violation": {
+      "type": "object",
+      "properties": {
+        "detected_at": { "$ref": "#/$defs/timestamp" },
+        "detection_source": { "$ref": "#/$defs/evidenceItem" },
+        "statement": { "$ref": "#/$defs/informationItem" },
+        "applicable_expectation": { "$ref": "#/$defs/informationItem" },
+        "observed_departure": { "$ref": "#/$defs/informationItem" },
+        "affected_scope": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reference" }
+        },
+        "immediate_containment": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/informationItem" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "investigation": {
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "enum": ["not_started", "in_progress", "completed", "deferred", "not_applicable"] },
+        "investigators": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/actor" }
+        },
+        "originating_agent_account": { "$ref": "#/$defs/informationItem" },
+        "findings": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/claim" }
+        },
+        "evidence_limitations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/informationItem" }
+        },
+        "completed_at": { "$ref": "#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    },
+    "correctiveAction": {
+      "type": "object",
+      "required": ["description", "disposition"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "target": { "$ref": "#/$defs/informationItem" },
+        "disposition": { "type": "string", "enum": ["proposed", "accepted", "rejected", "deferred", "implemented", "validated", "ineffective"] },
+        "selected_by": { "$ref": "#/$defs/actor" },
+        "rationale": { "$ref": "#/$defs/informationItem" },
+        "implemented_at": { "$ref": "#/$defs/timestamp" },
+        "validation": { "$ref": "#/$defs/evaluation" },
+        "related_record": { "$ref": "#/$defs/reference" }
+      },
+      "additionalProperties": false
+    },
+    "relationship": {
+      "type": "object",
+      "required": ["type", "target_id"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["supersedes", "narrows", "expands", "exception_to", "conflicts_with", "depends_on", "implements", "validates", "records_outcome_for", "records_error_for", "corrects", "reviews", "challenges", "prompted_by", "derived_from", "investigates", "updates", "remediates", "recurs_from", "relates_to", "other"]
+        },
+        "target_id": { "type": "string", "minLength": 1 },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

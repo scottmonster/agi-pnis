@@ -1,0 +1,1 @@
+add ability to limit result messages per file default first 3

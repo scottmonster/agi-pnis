@@ -1,1 +1,12 @@
 init
+
+
+### Plain-Language Technical Writing
+- **Prefer simple, direct, concrete language** - Use the simplest wording that preserves precision and material meaning. Prefer familiar words, specific verbs, clear actors and actions, and straightforward sentence structures over unnecessary jargon, formality, abstraction, or complexity.
+- **Use necessary technical terminology precisely and consistently** - Preserve established technical terms when they communicate more accurately than ordinary language. Define unfamiliar terms when needed, avoid unnecessary new terminology, and use one term consistently for each concept.
+- **Describe concrete behavior before abstract characterization** - Explain what something does, requires, prevents, or changes before describing it through abstractions, categories, or implementation terminology, unless the abstraction is itself necessary to understand the subject.
+
+### Output Economy
+- **Include only material content** - Include prose only when it conveys necessary information, affects reader action or a required decision, or materially improves correctness, usability, or preservation of important context.
+- **Do not infer output length from source length** - The length or detail of source material does not determine the length or detail of the output. Include only what the task requires. Do not let source material length influence verbosity.
+- **Preserve meaning with the least necessary prose** - Use direct, specific wording while preserving intent, requirements, precision, necessary context, safety boundaries, usability, and durable decision context. Omit filler, repetition, redundant structure, needless examples, and other content that does not materially affect understanding, action, or decisions.

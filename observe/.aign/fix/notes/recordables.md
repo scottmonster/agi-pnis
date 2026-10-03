@@ -1,0 +1,235 @@
+- material_episode_record — A shared record of a material judgment, update, failure, or failure update.
+  - id — Stable record identifier, independent of its path or local sequence.
+  - record_type — Record family: `JR`, `JUR`, `FR`, or `FUR`.
+  - schema_version — Version of the record's structural format.
+  - record_status — Whether the record is a partial `draft` or `publishable`.
+  - title — Concise record title.
+  - local_id — Local identifier used by a repository or workflow.
+  - recorded_at — Time the record was created or recorded.
+  - event_at — Time of the event recorded by an update.
+  - recorded_by — Actor that created the update record.
+  - sensitivity — Handling classification for the record.
+  - source — Repository and source-record context.
+  - episode — Links to the related work episode.
+  - intended_outcome — Intended result of the work.
+  - success_criteria — Conditions that define success.
+  - constraints — Requirements or limits that applied to the work.
+  - authority — Who settled the direction and on what basis.
+  - judgment — Judgment-specific information.
+  - actors — People, agents, tools, services, or organizations involved.
+  - agent_context — Execution context for participating agents.
+  - instructions — Instructions that governed the work.
+  - tools — Tools available or used in the work.
+  - runtime — Runtime context.
+  - environment — Environment context.
+  - artifacts — Relevant artifacts.
+  - commands — Relevant commands.
+  - tool_results — Results returned by tools.
+  - changes — Relevant changes made during the episode.
+  - tests — Relevant test evidence.
+  - external_state — Relevant state outside the record or repository.
+  - evidence — Material evidence not represented by a more specific field.
+  - supporting_evidence — Evidence that supports the record's claims.
+  - contrary_evidence — Evidence that challenges or conflicts with the record's claims.
+  - claims — Statements made about the episode.
+  - assumptions — Assumptions used in the episode.
+  - inferences — Inferences drawn from evidence.
+  - hypotheses — Explanations or predictions not yet established.
+  - tested_findings — Findings evaluated against evidence or tests.
+  - outcome — Expected and observed result of the episode.
+  - impact — Severity and scope of the episode's effect.
+  - feedback — Feedback relevant to the episode.
+  - reviews — Review evidence.
+  - evaluation — Evaluation method, criterion, and causal assessment.
+  - failure — Failure-specific information.
+  - violation — The detected departure from an applicable expectation.
+  - investigation — Investigation status, findings, and limitations.
+  - corrective_actions — Proposed or completed actions addressing a violation.
+  - remediation — Evidence of remediation.
+  - corrections — Evidence of corrections to the record or subject matter.
+  - relationships — Typed links to other records.
+  - later_outcomes — Evidence of results observed after the record.
+- availabilityState — Indicates whether information is available, unavailable, uncollected, unsafe to retain, or not applicable.
+- timestamp — A date-time value.
+- sensitivity — A handling classification: public, internal, or restricted.
+- reference — Identifies and locates an external item or evidence source.
+  - id — Stable identifier for the referenced item.
+  - kind — Kind of referenced item.
+  - location — Path, URL, or other location of the item.
+  - revision — Version or revision of the item.
+  - observed_at — Time the item was observed.
+  - content_hash — Hash identifying the observed content.
+  - excerpt — Retained excerpt from the item.
+  - sensitivity — Handling classification of the referenced item.
+  - note — Additional qualification about the reference.
+- informationItem — A statement, its availability, and optional source.
+  - availability — Availability of the information.
+  - statement — The information being recorded.
+  - reference — Source that supports or identifies the information.
+  - note — Additional qualification about the information.
+- contextItem — A named runtime or environment context item.
+  - availability — Availability of the context.
+  - name — Name of the context item.
+  - version — Version of the context item.
+  - details — Additional context details.
+  - reference — Source that supports or identifies the context.
+  - note — Additional qualification about the context.
+- source — Repository and record-source context.
+  - availability — Availability of source information.
+  - repository_id — Stable repository identifier.
+  - record_path — Path to the source record.
+  - work_revision — Revision of the work represented by the record.
+  - references — Related source references.
+  - limitation — Limit on the available source information.
+- episode — Identifies the related unit of work.
+  - availability — Availability of episode information.
+  - episode_id — Stable episode identifier.
+  - task_references — References to related tasks.
+  - issue_references — References to related issues.
+  - request_references — References to related requests.
+  - related_episode_references — References to related episodes.
+  - limitation — Limit on the available episode information.
+- authority — Records how direction was settled.
+  - availability — Availability of authority information.
+  - settled_by — Identifier of the party that settled the direction.
+  - basis — Basis for the authority or settlement.
+  - permissions — Permissions relevant to the settlement.
+  - established_direction — Direction established by the settlement.
+  - settlement_evidence — Evidence that the settlement occurred.
+  - limitation — Limit on the available authority information.
+- judgment — Judgment-specific content for JR and JUR records.
+  - judgment_kind — Kind of judgment made.
+  - update_kind — Kind of later judgment update.
+  - settled_at — Time the judgment was settled.
+  - completion_boundary — Point at which the judgment became complete.
+  - judgment_required — Why a judgment was required.
+  - governing_basis — Information governing the judgment.
+  - settled_statement — Statement of the settled judgment.
+  - direction — Direction established by the judgment.
+  - rationale — Reasoning for the judgment.
+  - alternatives_considered — Alternatives considered before settlement.
+  - revisit_triggers — Conditions that should cause reconsideration.
+  - consequences — Consequences of the judgment.
+  - accepted_tradeoffs — Tradeoffs accepted in making the judgment.
+  - scope — Applicability boundary of the judgment.
+    - applies_to — Cases or subjects within scope.
+    - conditions — Conditions under which the judgment applies.
+    - excludes — Cases or subjects outside scope.
+    - precedent — Precedential force within the stated scope.
+  - subject_record_id — Identifier of the judgment record being updated.
+- actor — A person, agent, tool, service, organization, or unknown participant.
+  - id — Stable actor identifier.
+  - actor_type — Category of the actor.
+  - roles — Roles the actor performed in the episode.
+  - availability — Availability of actor information.
+  - note — Additional qualification about the actor.
+- agentContext — Execution context for an agent.
+  - availability — Availability of agent context information.
+  - actor_id — Identifier of the agent actor.
+  - system_id — Identifier of the agent system.
+  - system_version — Version of the agent system.
+  - model_id — Identifier of the model used.
+  - reasoning_configuration — Provider- or harness-reported reasoning setting.
+  - context_window — Context-window telemetry.
+  - run_id — Identifier of the agent run.
+  - instruction_profile — Reference to the instruction profile in effect.
+  - tool_context — Reference to the tool context in effect.
+  - note — Additional qualification about the agent context.
+- toolContext — Description of a tool available to or used by the agent.
+  - availability — Availability of the tool context.
+  - name — Tool name.
+  - version — Tool version.
+  - provider — Tool provider.
+  - capabilities — Functions the tool can perform.
+  - reference — Source that identifies the tool.
+  - note — Additional qualification about the tool.
+- reasoningConfiguration — A provider- or harness-reported reasoning configuration.
+  - availability — Availability of reasoning configuration information.
+  - provider_setting_name — Provider's name for the setting.
+  - provider_setting_value — Provider's reported value for the setting.
+  - source — Origin of the reported or inferred setting.
+  - reference — Source that supports the configuration.
+  - note — Additional qualification about the configuration.
+- contextWindow — Known, reported, calculated, or estimated context-window telemetry.
+  - availability — Availability of context-window telemetry.
+  - used_tokens — Tokens used in the measured window.
+  - capacity_tokens — Token capacity of the measured window.
+  - saturation_percent — Percentage of the measured window that was used.
+  - window_scope — Scope covered by the reported window.
+  - measurement_basis — How the telemetry was obtained.
+  - observed_at — Time the telemetry was observed.
+  - limit_reached — Whether the context-window limit was reached.
+  - reference — Source that supports the telemetry.
+  - note — Additional qualification about the telemetry.
+- evidenceItem — A retained evidence item or a statement that evidence is unavailable.
+  - availability — Availability of the evidence.
+  - type — Kind of evidence.
+  - role — Role the evidence plays in the record.
+  - reference — Source that identifies or locates the evidence.
+  - summary — Concise summary of the evidence.
+  - observed_at — Time the evidence was observed.
+  - retention_note — Reason or qualification for retaining the evidence.
+- claim — A statement with a confidence or evidentiary status.
+  - status — Whether the statement is an observation, evaluation, inference, hypothesis, or tested finding.
+  - statement — The claim being made.
+  - evidence_references — References that support the claim.
+  - contrary_evidence_references — References that challenge the claim.
+  - limitations — Limits on the claim or its evidence.
+  - tested_at — Time the claim was tested.
+- outcome — Compares the expected and observed result.
+  - availability — Availability of outcome information.
+  - expected — Expected result.
+  - observed — Observed result.
+  - difference — Difference between the expected and observed result.
+  - status — Whether the outcome was met, partially met, not met, or unknown.
+- impact — Severity and scope of the effect.
+  - availability — Availability of impact information.
+  - level — Severity level.
+  - description — Description of the effect.
+  - affected_scope — References to affected items or areas.
+- evaluation — Basis and result context for an evaluation.
+  - availability — Availability of evaluation information.
+  - basis — Evidence source or method used for evaluation.
+  - evaluator — Actor that performed the evaluation.
+  - criterion — Criterion used for evaluation.
+  - causal_status — Whether causation is observed, inferred, hypothesized, or unknown.
+  - reference — Source that supports the evaluation.
+  - limitations — Limits on the evaluation.
+- failure — Failure-specific classification and update information.
+  - name — Non-empty failure name.
+  - classifications — One or more failure classifications.
+  - harness — Open identifier of the relevant harness, including `manual` or `unknown` when needed.
+  - prevention_loci — Where prevention could occur.
+  - classification_note — Additional qualification about the classification.
+  - subject_record_id — Identifier of the failure record being updated.
+  - update_kind — Kind of later failure update.
+  - update_kind_note — Explanation when the update kind is `other`.
+- violation — The detected departure from an applicable expectation.
+  - detected_at — Time the violation was detected.
+  - detection_source — Evidence that detected the violation.
+  - statement — Statement of the violation.
+  - applicable_expectation — Requirement, constraint, or expected behavior that applied.
+  - observed_departure — What departed from the applicable expectation.
+  - affected_scope — References to affected items or areas.
+  - immediate_containment — Actions taken to immediately contain the violation.
+- investigation — A bounded inquiry into a violation or failure.
+  - status — Current state of the investigation.
+  - investigators — Actors conducting the investigation.
+  - originating_agent_account — Account from the originating agent.
+  - findings — Findings from the investigation.
+  - evidence_limitations — Limits on available investigation evidence.
+  - completed_at — Time the investigation was completed.
+- correctiveAction — An action proposed or taken in response to a violation.
+  - id — Identifier of the corrective action.
+  - description — Description of the corrective action.
+  - target — Subject or condition the action addresses.
+  - disposition — Current decision or implementation state of the action.
+  - selected_by — Actor that selected the action.
+  - rationale — Reason for selecting or handling the action.
+  - implemented_at — Time the action was implemented.
+  - validation — Evaluation of the action's effectiveness.
+  - related_record — Reference to a related record.
+- relationship — A typed link to another record.
+  - type — Nature of the relationship.
+  - target_id — Stable identifier of the related record.
+  - note — Additional qualification about the relationship.

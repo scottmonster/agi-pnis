@@ -1,1 +1,7 @@
 .ign
+ign.*
+
+.agents/records
+
+.aign/agent-transcripts/tool_log.log
+
