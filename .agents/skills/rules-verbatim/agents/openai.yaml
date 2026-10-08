@@ -1,0 +1,5 @@
+interface:
+  display_name: "rules-verbatim"
+  short_description: "Use to output all of the user supplied rules."
+policy:
+  allow_implicit_invocation: false

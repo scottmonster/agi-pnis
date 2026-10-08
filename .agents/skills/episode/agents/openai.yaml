@@ -1,0 +1,6 @@
+interface:
+  display_name: "Episode"
+  short_description: "Record consequential decisions and confirmed problems"
+  default_prompt: "Use $episode when a decision will guide later work or a confirmed problem needs a durable record."
+policy:
+  allow_implicit_invocation: true

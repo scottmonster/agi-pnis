@@ -1,0 +1,6 @@
+interface:
+  display_name: "md"
+  short_description: "Create, revise, transform, or audit Markdown"
+  default_prompt: "Use $my-md to create, revise, transform, or audit Markdown."
+policy:
+  allow_implicit_invocation: false

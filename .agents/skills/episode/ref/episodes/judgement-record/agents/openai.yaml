@@ -1,0 +1,6 @@
+interface:
+  display_name: "Judgement Record"
+  short_description: "Create material JR and JUR records"
+  default_prompt: "Use $judgement-record to create or update a material Judgement Record (JR) or Judgement Update Record (JUR)."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Trans"
+  short_description: "Export conversation messages as Markdown"
+  default_prompt: "Use $trans to export the last 10 messages as clean Markdown."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+skill_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$skill_dir/src/scripts/discover-tiktoken-cli.sh"
+
+cli="$(find_tiktoken_cli || true)"
+if [[ -z "$cli" ]]; then
+  echo "Unable to find tiktoken-cli with command -v, which, or npm prefix -g." >&2
+  exit 127
+fi
+
+npm_root="$(npm root -g 2>/dev/null || true)"
+if [[ -z "$npm_root" ]]; then
+  echo "Unable to determine the global npm root." >&2
+  exit 1
+fi
+
+model_json="$(find "$npm_root" -path '*/tiktoken/model_to_encoding.json' -type f -print -quit 2>/dev/null || true)"
+if [[ -z "$model_json" ]]; then
+  echo "Unable to find tiktoken/model_to_encoding.json below: $npm_root" >&2
+  exit 1
+fi
+
+command -v jq >/dev/null 2>&1 || { echo "jq is required to update the model table." >&2; exit 127; }
+
+temp_map="$(mktemp "${TMPDIR:-/tmp}/tokens-model-map.XXXXXX")"
+temp_table="$(mktemp "${TMPDIR:-/tmp}/tokens-model-table.XXXXXX")"
+temp_skill="$(mktemp "${TMPDIR:-/tmp}/tokens-skill.XXXXXX")"
+trap 'rm -f "$temp_map" "$temp_table" "$temp_skill"' EXIT
+
+jq -r 'to_entries[] | "\(.key)\t\(.value)"' "$model_json" > "$temp_map"
+if [[ ! -s "$temp_map" ]]; then
+  echo "The discovered model map contained no models." >&2
+  exit 1
+fi
+
+max_model_width="$(awk -F '\t' 'length($1) > max { max = length($1) } END { print max }' "$temp_map")"
+max_encoding_width="$(awk -F '\t' 'length($2) > max { max = length($2) } END { print max }' "$temp_map")"
+printf '| %-*s | %-*s |\n' "$max_model_width" 'model' "$max_encoding_width" 'encoding' >> "$temp_table"
+printf '|:%-*s|:%-*s|\n' "$((max_model_width + 1))" '' "$((max_encoding_width + 1))" '' | tr ' ' '-' >> "$temp_table"
+while IFS=$'\t' read -r model encoding; do
+  printf '| %-*s | %-*s |\n' "$max_model_width" "$model" "$max_encoding_width" "$encoding" >> "$temp_table"
+done < "$temp_map"
+
+mv "$temp_map" "$skill_dir/src/model-to-encoding.tsv"
+awk -v table_file="$temp_table" '
+  /<!-- model-encodings:start -->/ {
+    print
+    while ((getline line < table_file) > 0) print line
+    close(table_file)
+    in_table = 1
+    next
+  }
+  /<!-- model-encodings:end -->/ {
+    in_table = 0
+  }
+  !in_table { print }
+' "$skill_dir/SKILL.md" > "$temp_skill"
+mv "$temp_skill" "$skill_dir/SKILL.md"
+rm -f "$temp_table"
+trap - EXIT
+
+printf 'Updated %s\n' "$skill_dir/SKILL.md"
+printf 'models: %s\n' "$(wc -l < "$skill_dir/src/model-to-encoding.tsv" | tr -d ' ')"
+printf 'tiktoken-cli: %s\n' "$cli"
+printf 'model map: %s\n' "$model_json"

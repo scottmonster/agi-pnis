@@ -1,0 +1,6 @@
+interface:
+  display_name: "Tokens"
+  short_description: "Count text with model-specific tokenizers"
+  default_prompt: "Use $tokens to count tokens in this file with the currently running model."
+policy:
+  allow_implicit_invocation: false

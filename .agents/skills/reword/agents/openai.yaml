@@ -1,0 +1,6 @@
+interface:
+  display_name: "Reword"
+  short_description: "Generate meaning-preserving rewordings"
+  default_prompt: "Use $reword to create N faithful rewordings of this material."
+policy:
+  allow_implicit_invocation: false
