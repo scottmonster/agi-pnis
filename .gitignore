@@ -1,0 +1,124 @@
+# General defaults for Python, JavaScript/TypeScript, Go, and shell projects.
+# Keep dependency manifests and lockfiles (including go.sum) in version control.
+
+.codex
+.aws
+
+# Operating system files
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.Trash-*/
+
+# Editor files and local project settings
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.#*
+\#*\#
+*.orig
+*.rej
+
+# Logs, temporary files, and caches
+*.log
+*.pid
+*.pid.lock
+*.tmp
+*.temp
+.cache/
+.eslintcache
+.stylelintcache
+
+# Local environment configuration and credentials
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+!.env.*.example
+!.env.*.sample
+!.env.*.template
+.direnv/
+
+# Python bytecode and native extensions
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+__pypackages__/
+
+# Python packaging and tooling
+*.egg
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pytype/
+.pyre/
+.tox/
+.nox/
+.hypothesis/
+.ipynb_checkpoints/
+
+# JavaScript/TypeScript dependencies and tooling
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/*
+!.yarn/patches/
+!.yarn/plugins/
+!.yarn/releases/
+!.yarn/sdks/
+!.yarn/versions/
+.pnp.*
+*.tsbuildinfo
+.next/
+.nuxt/
+.output/
+.svelte-kit/
+.angular/
+.parcel-cache/
+.turbo/
+.vite/
+.vercel/
+.netlify/
+
+# Go build and test outputs; vendoring remains a project-specific choice
+*.test
+go.work
+go.work.sum
+
+# Shared build, test, and coverage outputs
+build/
+dist/
+coverage/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+.nyc_output/
+lcov.info
+*.o
+*.a
+*.dll
+*.dylib
+*.exe
+
+# Shell session artifacts
+.bash_history
+.zsh_history
+.zcompdump*
+nohup.out
