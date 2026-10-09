@@ -81,7 +81,7 @@ This file is the canonical map of active governance material in this directory. 
     Relation: Clarifies the status of informational material used alongside active governance.
 
 12. [`review-patterns/how-to-review.md`](review-patterns/how-to-review.md)
-    Purpose: Explains how to size a code review, load applicable patterns, verify findings, and handle failure records, judgement records, and prevention rules.
+    Purpose: Explains how to size a code review, use catalogs to identify review areas, selectively load rules and examples, verify findings, and handle failure records, judgement records, and prevention rules.
     Relation: Applies the findings guide and routes qualifying records to the episode skill. Review scope follows the changed behavior, affected scope, and potential impact.
 
 ## Review reference material
@@ -90,7 +90,7 @@ Load relevant sections for the review at hand. Do not include the entire library
 
 1. [`review-patterns/`](review-patterns/)
    Purpose: Provides catalogs, concise rules, and examples for AI mistakes, design concepts, language pitfalls, and other review concerns.
-   Relation: Supports the review guide. Use rules to select checks, catalog entries to understand patterns, and examples when needed to assess applicability or exceptions.
+   Relation: Supports the review guide. Use catalog headings and entries to identify review areas, matching rules to select checks, and individual examples when needed to assess applicability or exceptions.
 
 2. [`review-patterns/.ops/catalog-family-spec.md`](review-patterns/.ops/catalog-family-spec.md)
    Purpose: Defines the shared structure, identifiers, and consistency requirements for catalogs, rules, and examples.

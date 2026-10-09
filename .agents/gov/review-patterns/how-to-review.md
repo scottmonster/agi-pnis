@@ -2,7 +2,7 @@
 
 ## 1. Purpose and scope
 
-Use this library during code reviews to identify applicable patterns, verify material problems, and select useful prevention rules. Load only the material needed for the review. Do not include the entire library in routine task context or treat every entry as a required check.
+Use this library during code reviews to identify areas worth inspecting, verify material problems, and select useful prevention rules. Start with the catalogs as a map, then load only the rules and examples needed for the review. Do not include the entire library in routine task context or treat every entry as a required check.
 
 The library helps interpret code; a pattern match alone does not establish a violation. Applicable requirements, actual behavior, exceptions, and evidence determine whether a finding is justified.
 
@@ -18,21 +18,54 @@ Select checks based on the changed behavior, affected scope, and potential impac
 
 ## 3. Select and load patterns
 
-Use filenames and category headings to locate relevant material, then read the selected sections. Search terms help discovery but do not replace understanding the changed behavior.
+Use progressive loading: catalog filenames → category headings → relevant catalog entries → matching rules → individual examples when needed. The catalogs are the discovery layer; examples are supporting detail, loaded on demand.
+
+### 3.1 Identify review areas
+
+Start from the change's purpose, languages and runtimes, affected contracts, and significant behavior. Use those signals to select catalog families:
 
 | Material | When to use it |
 |---|---|
-| `pitfalls/<language>/` | Language-specific behavior affected by the change |
-| `design-concepts/` | Changes to responsibilities, boundaries, dependencies, or design |
-| `ai-smells/` | Potential mistakes in interpreting, implementing, or validating the request |
-| `misc/` | Relevant concerns not covered by the other families |
+| `pitfalls/<language>/*-catalog.md` | Language-specific behavior affected by the change; include relevant runtime languages, such as JavaScript when reviewing TypeScript runtime behavior |
+| `design-concepts/design-concepts-catalog.md` | Changes to responsibilities, boundaries, dependencies, or design |
+| `ai-smells/ai-smells-catalog.md` | Potential mistakes in interpreting, implementing, or validating the request |
+| `misc/misc-catalog.md` | Relevant concerns not covered by the other families |
 
-Within a selected family:
+List catalog filenames without reading their contents. The current files use the singular `*-catalog.md` suffix. Read category headings in the selected catalogs to identify areas worth inspecting, including concerns not named explicitly in the diff. For example, an async change may warrant checking cancellation and task lifetime as well as blocking calls.
 
-- Use `*-rules.md` to locate concise checks relevant to the change.
-- Read the corresponding `*-catalog.md` entry to understand the pattern and its distinctions. The catalog owns the entry inventory; rules and examples are derived from it.
-- Read the matching `examples/` file when the explanation, boundaries, or exceptions are needed to assess the code.
+Read the one-line entries under relevant headings. Search canonical names, aliases, and definitions to narrow large sections or find a particular concern. Search terms help discovery but do not replace inspecting neighboring entries or understanding the changed behavior. A keyword miss does not establish that an area is irrelevant.
+
+### 3.2 Load detail for selected candidates
+
+For each relevant entry:
+
+- Use its family and index to read the matching `*-rules.md` entry for an actionable check. The catalog owns the entry inventory; rules and examples are derived from it. Do not load the entire rules file merely to retrieve a few checks.
+- Inspect the reviewed code against the entry and rule. Open the matching `examples/<index>-*.md` file only when its mechanism, boundaries, exceptions, or comparison would help assess applicability. A confirmed concern does not require opening an example if the necessary evidence is already clear.
+- Follow related concepts only when they would resolve a distinction or a related risk in the review. Do not recursively load every related entry or example.
 - Consult `.ops/sources/` only when provenance or supporting evidence is needed. `.ops/archive/` is historical material, not active instruction. Build workflows are for maintaining the library, not routine code review.
+
+Keep only relevant entries, checks, and unresolved questions in working context. After resolving a candidate, retain its conclusion and evidence rather than copying the example into review notes. Expand to another section or family when the code or evidence gives a reason; stop loading once applicability and the review conclusion are established.
+
+### 3.3 Example lookup
+
+From the repository root, a Python async review could start with:
+
+```sh
+# Discover catalog paths without loading entries or examples.
+rg --files .agents/gov/review-patterns -g '*-catalog.md'
+
+# Map the selected catalog, then locate relevant entries.
+rg -n '^## ' .agents/gov/review-patterns/pitfalls/python/python-pitfalls-catalog.md
+rg -n -i 'asyncio|cancellation|task lifecycle' .agents/gov/review-patterns/pitfalls/python/python-pitfalls-catalog.md
+
+# Retrieve one candidate and its matching check.
+rg -n '^3\.9\.1 ' .agents/gov/review-patterns/pitfalls/python/python-pitfalls-{catalog,rules}.md
+
+# Locate its example if more explanation is needed; locating it does not load it.
+rg --files .agents/gov/review-patterns/pitfalls/python/examples -g '3.9.1-*.md'
+```
+
+Use the returned line numbers to read relevant sections, including their `###` headings, with a bounded file read. Avoid bulk reads of `examples/` and unscoped content searches across the whole library. These commands illustrate retrieval, not a complete checklist for every Python async change.
 
 Reference a pattern by its family, entry index, and file link. An index alone is not unique across the library. A review-pattern identifier is not automatically an episode failure identifier.
 
